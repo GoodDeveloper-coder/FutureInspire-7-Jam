@@ -63,6 +63,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 moveDirection = transform.TransformDirection(new Vector3(moveInput.x, 0, moveInput.y)) * _currentSpeed;
         moveDirection.y = _rb.velocity.y;
         _rb.velocity = moveDirection;
+        // _rb.AddForce(moveDirection, ForceMode.Force);
 
         _animator.SetFloat("Move", moveInput.sqrMagnitude);
     }
