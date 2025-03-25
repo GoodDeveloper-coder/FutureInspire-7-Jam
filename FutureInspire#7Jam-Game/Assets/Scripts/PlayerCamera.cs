@@ -7,7 +7,6 @@ using UnityEngine.InputSystem;
 public class PlayerCamera : MonoBehaviour
 {
     [SerializeField] private float _sensitivity = 1f;
-    [SerializeField] private float _followSpeed = 100f;
     [SerializeField] private float _maxAnglesDifference = 30f;
     [SerializeField] private Transform _player;
     [SerializeField] private InputActionReference _cameraInput;
@@ -42,7 +41,7 @@ public class PlayerCamera : MonoBehaviour
             }
         }
 
-        transform.position = Vector3.Slerp(transform.position, _player.position, _followSpeed * Time.deltaTime);
+        transform.position = _player.position;
     }
 
     void EnableFreeCamera(InputAction.CallbackContext context)
