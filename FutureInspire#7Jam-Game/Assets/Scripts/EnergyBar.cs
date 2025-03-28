@@ -1,10 +1,17 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnergyBar : MonoBehaviour
 {
+    [Header("Bar Scale")]
     [SerializeField] private PlayerMovement _playerMovement;
     [SerializeField] private Transform _energyBar;
+
+    [Header("Bar Fill Amount")]
+    [SerializeField] private bool _barFillAmount = false;
+    [SerializeField] private Image _barImage;
+
     private CanvasGroup _canvasGroup;
 
     void Start()
@@ -16,7 +23,10 @@ public class EnergyBar : MonoBehaviour
 
     void Update()
     {
-        _energyBar.transform.localScale = new Vector3(_playerMovement._energy / 10f, 1, 1);
+        if (!_barFillAmount)
+            _energyBar.transform.localScale = new Vector3(_playerMovement._energy / 10f, 1, 1);
+        else
+            _barImage.fillAmount = _playerMovement._energy / 10f;
     }
 
     void Appear()

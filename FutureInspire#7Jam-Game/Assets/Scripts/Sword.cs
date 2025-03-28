@@ -7,6 +7,7 @@ using DG.Tweening;
 public class Sword : MonoBehaviour
 {
     [Header("Sword Settings")]
+    [SerializeField] private float _attackDamage = 10f;
     [SerializeField] private float _attackDelay = 1f;
     [SerializeField] private float _attackTime = 0.25f;
 
@@ -27,15 +28,10 @@ public class Sword : MonoBehaviour
 
     void Start()
     {
-        _attackInput.action.started += Attack;
+        _attackInput.action.started += (InputAction.CallbackContext context)=> Attack();
     }
 
-    void Update()
-    {
-        
-    }
-
-    void Attack(InputAction.CallbackContext context)
+    void Attack()
     {
         if (!_canAttack || !_playerMovement._canMove || !_playerMovement._isOnGround)
             return;
@@ -43,19 +39,31 @@ public class Sword : MonoBehaviour
         _canAttack = false;
         _playerMovement.SetCanMoveState(false);
         _animator.SetTrigger("Attack");
+        SoundManager._instance.PlaySound("SwordAttack");
         Camera.main.DOShakeRotation(1f, 0.25f);
 
+        StartCoroutine(StartSlashVfx(0.2f));
+        StartCoroutine(AttackDelay());
+    }
+
+    public void CheckAttackColliders()
+    {
         Collider[] colliders = Physics.OverlapSphere(_checkColliderPos.position, _colliderRadius);
         foreach (Collider collider in colliders)
         {
             if (collider.gameObject.tag == "Enemy")
             {
-                Destroy(collider.gameObject);
+                if (collider.gameObject.TryGetComponent<HealthManager>(out HealthManager healthManager))
+                {
+                    healthManager.TakeDamage(_attackDamage);
+                }
             }
         }
+    }
 
-        StartCoroutine(StartSlashVfx(0.2f));
-        StartCoroutine(AttackDelay());
+    public void SetDamage(float damage)
+    {
+        _attackDamage = damage;
     }
 
     private IEnumerator AttackDelay()
@@ -74,6 +82,6 @@ public class Sword : MonoBehaviour
 
     void OnDestroy()
     {
-        _attackInput.action.started -= Attack;
+        _attackInput.action.started -= (InputAction.CallbackContext context)=> Attack();
     }
 }

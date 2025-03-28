@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -63,7 +62,6 @@ public class PlayerMovement : MonoBehaviour
         Vector3 moveDirection = transform.TransformDirection(new Vector3(moveInput.x, 0, moveInput.y)) * _currentSpeed;
         moveDirection.y = _rb.velocity.y;
         _rb.velocity = moveDirection;
-        // _rb.AddForce(moveDirection, ForceMode.Force);
 
         _animator.SetFloat("Move", moveInput.sqrMagnitude);
     }
@@ -141,7 +139,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private IEnumerator DisableMovementForTime(float time)
+    public IEnumerator DisableMovementForTime(float time)
     {
         SetCanMoveState(false);
         yield return new WaitForSeconds(time);
