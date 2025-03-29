@@ -62,7 +62,10 @@ public class Enemy : MonoBehaviour
     public void Attack()
     {
         if (Vector3.Distance(transform.position, _target.position) > _attackRadius)
+        {
+            StartCoroutine(AttackDelay());
             return;
+        }
 
         if (_targetHealthManager == null)
             _targetHealthManager = _target.GetComponent<HealthManager>();
